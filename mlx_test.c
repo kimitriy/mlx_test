@@ -6,7 +6,7 @@
 /*   By: rburton <rburton@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 19:25:56 by rburton           #+#    #+#             */
-/*   Updated: 2021/01/30 02:42:13 by rburton          ###   ########.fr       */
+/*   Updated: 2021/03/14 20:30:33 by rburton          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,9 @@ void	ft_putnbr(int n)
 
 int		key_hook(int keycode, t_whole *the_w)
 {
+	// int  scr_w;
+	// int  scr_h;
+
 	ft_putnbr(keycode);
 	write(1, "\n", 1);
 	if (keycode == 13)
@@ -175,6 +178,8 @@ int		key_hook(int keycode, t_whole *the_w)
 		the_w->lim += 15;
 		img_node(the_w);
 	}
+	// mlx_get_screen_size(the_w->vrs.mlx, &scr_w, &scr_h);
+	// printf("scr_w:%d, scr_h:%d\n", scr_w, scr_h);
 	return (0);
 }
 
@@ -188,6 +193,13 @@ int		close_mlx_win(int keycode, t_vars *vrs)
 	return (0);
 }
 
+int		stop_ex(t_vars *vrs)
+{
+	mlx_destroy_window(vrs->mlx, vrs->win);
+	exit (0);
+	return (0);
+}
+
 void	func(t_whole *the_w)
 {
     the_w->vrs.mlx = mlx_init();
@@ -196,6 +208,7 @@ void	func(t_whole *the_w)
 	the_w->dt.addr = mlx_get_data_addr(the_w->dt.img, &the_w->dt.bits_per_pix, &the_w->dt.line_lngth, &the_w->dt.endian);
 	mlx_key_hook(the_w->vrs.win, key_hook, the_w);
     mlx_hook(the_w->vrs.win, 2, 1L<<0, close_mlx_win, &the_w->vrs);
+	mlx_hook(the_w->vrs.win, 17, 1L << 2, stop_ex, &the_w->vrs);
 	
 	img_node(the_w);
 	
@@ -204,9 +217,14 @@ void	func(t_whole *the_w)
 
 //MAIN/////////////////////////////////////////////////////////////////////
 
-int		main()
+int		main(int argc, char **argv)
 {
 	t_whole		the_w; //where hook changes something
+
+	(void)argc;
+	(void)argv;
+	// if (argv[1][0] == 's')
+		
 
 	the_w.rsltn.x = 1000;
 	the_w.rsltn.y = 1000;
@@ -215,6 +233,11 @@ int		main()
 
 	the_w.lim = 0;
 	
+	int  scr_w;
+	int  scr_h;
+	mlx_get_screen_size(the_w.vrs.mlx, &scr_w, &scr_h);
+	printf("s_w: %d, s_h: %d\n", scr_w, scr_h);
+
 	func(&the_w);
 
 	return (0);

@@ -14,26 +14,22 @@ SRC 		= 	mlx_test.c \
 
 OBJS		= ${SRC:.c=.o}
 
-NAME		= a.out
+NAME		= test
 
 GCC			= gcc
-
-#OPTFLAGS	= -O2
 
 CFLAGS		= -g -Wall -Wextra -Werror
 #CFLAGS		= -g
 
-#MLX		= -Imlx
+MLXDY		= make -C ./mlx_dy/
 
-OPENGL		= -L. libmlx.a -framework OpenGL -framework AppKit
+OPENGL		= -framework OpenGL -framework AppKit
 
 RM			= rm -f
 
-#ARRC		= ar rc
-
 FT_H		= mlx_test.h
 
-#LIB			= libminirt.a
+LIB			= libmlx.dylib
 
 all:	${NAME}
 
@@ -43,13 +39,13 @@ all:	${NAME}
 .c.o:
 		${GCC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
-${NAME}:${OBJS}
-		${GCC} ${CFLAGS} -o ${NAME} ${OBJS} ${OPENGL}
-#		${ARRC} ${LIB} ${OBJS}
-#		${ARRC} ${LIB} ${FT_H}
+${NAME}:		${OBJS} ${HEADER}
+				# ${MLXST}
+				# cp ./mlx_st/libmlx.a .
+				${MLXDY}
+				cp ./mlx_dy/libmlx.dylib .
+				${GCC} ${CFLAGS} -o ${NAME} ${OBJS} ${LIB} ${OPENGL}
 
-#main:
-#		${GCC} ${CFLAGS} ${LIB} ft_mnrt_main.c
 
 clean:
 		${RM} ${OBJS}
@@ -57,5 +53,8 @@ clean:
 fclean:	clean
 		${RM} ${NAME}
 		${RM} ${LIB}
+		# make clean -C ./mlx_st/
+		make clean -C ./mlx_dy/
+		# ${RM} img.bmp
 
 re:		fclean all

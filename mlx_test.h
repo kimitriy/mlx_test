@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
-# include <mlx.h>
+# include "mlx_dy/mlx.h"
 
 typedef struct		s_color
 {
